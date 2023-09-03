@@ -1,5 +1,5 @@
 import {expect, test} from 'vitest'
-import {createTreeOfSize} from "./MerkleTreeDataContext.tsx";
+import {createTreeOfSize} from "./MerkleTreeProvider.tsx";
 
 
 test('create tree of size', () => {
