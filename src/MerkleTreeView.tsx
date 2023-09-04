@@ -1,3 +1,4 @@
+import './MerkleTreeView.css'
 import {FC, PropsWithChildren, useState} from "react";
 import {TreeLeaf, TreeNode, TreePart, MerkleTree} from "./merkle-tree-data";
 import {useMerkleTree} from "./MerkleTreeProvider.tsx";
@@ -117,16 +118,19 @@ interface MerkleTreeLeafProps extends BaseNodeProps {
 
 const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({part, isPartOfMerkleProof = false, onSelectionChange = () => {}}) => {
     const [selected, setSelected] = useState(false)
-    const {add, remove} = useMerkleProofs()
+    const merkleProof = useMerkleProofs()
+    const cmp = useCompoundMerkleProof()
 
 
     const clickHandler = () => {
         const val = !selected
         setSelected(val)
         if(val) {
-            add(part.hash, part)
+            merkleProof.add(part.hash, part)
+            cmp.add(part)
         } else {
-            remove(part.hash)
+            merkleProof.remove(part.hash)
+            cmp.remove(part)
         }
         onSelectionChange(val, part.hash)
     }

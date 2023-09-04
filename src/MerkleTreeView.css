@@ -20,7 +20,7 @@
 }
 .tree li {
   display: table-cell;
-  padding: 2.5em 0;
+  padding: 2.5em 0 0 0;
   vertical-align: top;
 }
 /* _________ */

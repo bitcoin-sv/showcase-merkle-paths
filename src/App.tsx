@@ -1,4 +1,3 @@
-import './App.css'
 import {MerkleTreeView} from "./MerkleTreeView.tsx";
 import {MerkleTreeProvider} from "./MerkleTreeProvider.tsx";
 import {MerkleTreeSizeSelector} from "./MerkleTreeSizeSelector.tsx";
