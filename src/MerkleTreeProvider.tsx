@@ -1,6 +1,7 @@
 import {FC, PropsWithChildren, createContext, useState, useContext} from 'react'
 import {MerkleTree, TreeLeaf, TreePart} from "./merkle-tree-data";
 import {chunk} from "lodash";
+import {useReset} from "./useReset.tsx";
 
 interface MerkleTreeDataContextValue {
     tree: MerkleTree
@@ -25,11 +26,14 @@ export const useMerkleTree = () => {
     if (!ctx) {
         throw new Error('useMerkleTree must be used within MerkleTreeDataContext')
     }
+
+    const { reset } = useReset()
     return {
         tree: ctx.tree,
         setTreeOfSize: (size: number) => {
             const newTree = createTreeOfSize(size)
             ctx.setTree(newTree)
+            reset()
         }
     }
 }

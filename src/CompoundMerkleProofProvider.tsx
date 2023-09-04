@@ -1,6 +1,7 @@
 import {CompoundMerkleProof, TreePart} from "./merkle-tree-data";
 import {createContext, FC, PropsWithChildren, useContext, useState} from "react";
 import * as _ from "lodash";
+import {useReset} from "./useReset.tsx";
 
 interface ContextValue {
     value: CompoundMerkleProof
@@ -12,6 +13,8 @@ Context.displayName = 'CompoundMerkleProofProvider'
 
 export const CompoundMerkleProofProvider: FC<PropsWithChildren> = ({children}) => {
     const [value, setValue] = useState<CompoundMerkleProof>([])
+    const {addListener} = useReset()
+    addListener("cmp", () => setValue([]))
 
     return <Context.Provider value={{
         value,
@@ -30,7 +33,7 @@ const useCmpContext = () => {
 export const useCompoundMerkleProof = () => {
     const ctx = useCmpContext()
     return {
-        proof: useCmpContext().value,
+        proof: ctx.value,
         add: (node: TreePart) => {
             const cmp = addNodeToCmp(node, ctx.value)
             ctx.setValue(cmp)

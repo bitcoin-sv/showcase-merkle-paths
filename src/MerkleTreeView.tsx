@@ -3,6 +3,7 @@ import {TreeLeaf, TreeNode, TreePart, MerkleTree} from "./merkle-tree-data";
 import {useMerkleTree} from "./MerkleTreeProvider.tsx";
 import {useCompoundMerkleProof} from "./CompoundMerkleProofProvider.tsx";
 import * as _ from "lodash";
+import {useMerkleProofs} from "./MerkleProofsProvider.tsx";
 
 interface MerkleTreeProps {
 }
@@ -12,7 +13,7 @@ export const MerkleTreeView: FC<MerkleTreeProps> = () => {
 
     return <figure>
         <ul className="tree">
-            <MerkleRoot tree={tree}/>
+            <MerkleRoot key={tree.hash} tree={tree}/>
         </ul>
     </figure>
 }
@@ -62,6 +63,7 @@ interface MerkleTreePartState {
 const Branches: FC<BranchesProps> = ({left , right, onSelectionChange = () => {}}) => {
     const [merkleTreePart, setMerkleTreePart] = useState<MerkleTreePartState>({left: [], right: []})
     const {add, remove} = useCompoundMerkleProof()
+    const {add: addToMerkleProofs} = useMerkleProofs()
     const leftSelectionHandler = (selected: boolean, hash: string) => {
         const val = {
             left: [...merkleTreePart.left],
@@ -69,6 +71,7 @@ const Branches: FC<BranchesProps> = ({left , right, onSelectionChange = () => {}
         }
         if(selected) {
             val.right.push(hash)
+            addToMerkleProofs(hash, right)
         } else {
             val.right = val.right.filter(it => it !== hash)
         }
@@ -85,6 +88,8 @@ const Branches: FC<BranchesProps> = ({left , right, onSelectionChange = () => {}
         }
         if(selected) {
             val.left.push(hash)
+            addToMerkleProofs(hash, left)
+
         } else {
             val.left = val.left.filter(it => it !== hash)
         }
@@ -112,10 +117,17 @@ interface MerkleTreeLeafProps extends BaseNodeProps {
 
 const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({part, isPartOfMerkleProof = false, onSelectionChange = () => {}}) => {
     const [selected, setSelected] = useState(false)
+    const {add, remove} = useMerkleProofs()
+
 
     const clickHandler = () => {
         const val = !selected
         setSelected(val)
+        if(val) {
+            add(part.hash, part)
+        } else {
+            remove(part.hash)
+        }
         onSelectionChange(val, part.hash)
     }
 

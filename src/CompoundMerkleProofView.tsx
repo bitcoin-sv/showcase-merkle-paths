@@ -10,6 +10,7 @@ export const CompoundMerkleProofView: FC<CompoundMerkleProofViewProps> = () => {
     const {proof} = useCompoundMerkleProof()
 
     return <div className={'compound-merkle-path'}>
+        <header>Compound Merkle Proof (CMP)</header>
         <pre>
             {JSON.stringify(proof, null, 2)}
         </pre>
