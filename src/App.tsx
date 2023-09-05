@@ -6,6 +6,7 @@ import {CompoundMerkleProofView} from "./CompoundMerkleProofView.tsx";
 import {MerkleProofProvider} from "./MerkleProofsProvider.tsx";
 import {MerkleProofsView} from "./MerkleProofsView.tsx";
 import {ResetProvider} from "./useReset.tsx";
+import {TscMerkleProofsView} from "./TscMerkleProofsView.tsx";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                         <MerkleTreeView/>
                         <MerkleProofsView />
                         <CompoundMerkleProofView/>
+                        <TscMerkleProofsView />
                     </MerkleProofProvider>
                 </CompoundMerkleProofProvider>
             </MerkleTreeProvider>

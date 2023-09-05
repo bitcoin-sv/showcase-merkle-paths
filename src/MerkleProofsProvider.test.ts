@@ -14,13 +14,10 @@ describe('MerkleProofProvider mutations', () => {
               {
                 "A": {
                   "index": 0,
-                  "nodes": [
+                  "path": [
                     "B",
                     "CD",
                   ],
-                  "target": "00aHEADER_HASH_IS_HERE",
-                  "targetType": "header",
-                  "txOrId": "A",
                 },
               }
             `)
@@ -40,23 +37,17 @@ describe('MerkleProofProvider mutations', () => {
               {
                 "A": {
                   "index": 0,
-                  "nodes": [
+                  "path": [
                     "B",
                     "CD",
                   ],
-                  "target": "00aHEADER_HASH_IS_HERE",
-                  "targetType": "header",
-                  "txOrId": "A",
                 },
                 "C": {
                   "index": 2,
-                  "nodes": [
+                  "path": [
                     "D",
                     "AB",
                   ],
-                  "target": "00aHEADER_HASH_IS_HERE",
-                  "targetType": "header",
-                  "txOrId": "C",
                 },
               }
             `)

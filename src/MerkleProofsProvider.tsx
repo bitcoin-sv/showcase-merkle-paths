@@ -29,7 +29,7 @@ const useContextValue = () => {
     return ctx
 }
 
-export const useMerkleProofs = () => {
+export const useMerklePath = () => {
     const ctx = useContextValue()
     return {
         proof: ctx.value,
@@ -50,17 +50,14 @@ export const useMerkleProofs = () => {
 export const addNodeToProof = (hash: string, node: TreePart, proofs: MerkleProofByTx): MerkleProofByTx => {
     const merkleProof = hash in proofs ? proofs[hash] : {
         index: -1,
-        txOrId: hash,
-        targetType: "header",
-        target: "00aHEADER_HASH_IS_HERE",
-        nodes: []
+        path: []
     }
 
     if (node.hash == hash) {
         merkleProof.index = node.offset
     } else {
-        const nodes = merkleProof.nodes
-        nodes.push(node.hash)
+        const path = merkleProof.path
+        path.push(node.hash)
     }
 
     proofs[hash] = merkleProof

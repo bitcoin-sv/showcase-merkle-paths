@@ -4,7 +4,7 @@ import {TreeLeaf, TreeNode, TreePart, MerkleTree} from "./merkle-tree-data";
 import {useMerkleTree} from "./MerkleTreeProvider.tsx";
 import {useCompoundMerkleProof} from "./CompoundMerkleProofProvider.tsx";
 import * as _ from "lodash";
-import {useMerkleProofs} from "./MerkleProofsProvider.tsx";
+import {useMerklePath} from "./MerkleProofsProvider.tsx";
 
 interface MerkleTreeProps {
 }
@@ -64,7 +64,7 @@ interface MerkleTreePartState {
 const Branches: FC<BranchesProps> = ({left , right, onSelectionChange = () => {}}) => {
     const [merkleTreePart, setMerkleTreePart] = useState<MerkleTreePartState>({left: [], right: []})
     const {add, remove} = useCompoundMerkleProof()
-    const {add: addToMerkleProofs} = useMerkleProofs()
+    const {add: addToMerkleProofs} = useMerklePath()
     const leftSelectionHandler = (selected: boolean, hash: string) => {
         const val = {
             left: [...merkleTreePart.left],
@@ -118,7 +118,7 @@ interface MerkleTreeLeafProps extends BaseNodeProps {
 
 const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({part, isPartOfMerkleProof = false, onSelectionChange = () => {}}) => {
     const [selected, setSelected] = useState(false)
-    const merkleProof = useMerkleProofs()
+    const merkleProof = useMerklePath()
     const cmp = useCompoundMerkleProof()
 
 

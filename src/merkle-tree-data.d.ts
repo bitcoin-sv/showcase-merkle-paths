@@ -20,10 +20,7 @@ export type CompoundMerkleProof = Record<string,number>[]
 
 export interface MerkleProof {
     index: number,
-    txOrId: string,
-    targetType: string,
-    target: string,
-    nodes: string[]
+    path: string[]
 }
 
 export type MerkleProofByTx = Record<string, MerkleProof>
