@@ -4,6 +4,7 @@ export interface TreeLeaf {
     height: 0
     hash: string
     offset: number
+    duplicated?: boolean
 }
 
 export interface TreeNode {
@@ -12,6 +13,7 @@ export interface TreeNode {
     offset: number
     left: TreePart
     right: TreePart
+    duplicated?: boolean
 }
 
 export type MerkleTree = TreeNode

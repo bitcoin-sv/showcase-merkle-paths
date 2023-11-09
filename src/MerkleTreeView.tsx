@@ -138,7 +138,7 @@ interface MerkleTreePartProps {
 
 const MerkleTreePart: FC<PropsWithChildren<MerkleTreePartProps>> = ({part, onClick = () => {}, className = '',  children}) => {
     return <li title={`height: ${part.height} offset: ${part.offset}`} onClick={onClick} className={className}>
-        <code>{part.offset}: {part.hash}</code>
+        <code>{part.offset}: {part.duplicated ? '*' : part.hash}</code>
         {children}
     </li>
 }

@@ -9,13 +9,20 @@ interface BsvUnifiedMerklePathViewProps {
 
 }
 
-interface BumpLeaf {
+type BumpLeaf = {
     hash: string,
     txid?: true,
     offset: number,
+} | {
+    offset: number,
+    duplicate: true
 }
 
-interface MerklePathLeaf extends BumpLeaf{
+interface MerklePathLeaf {
+    hash: string,
+    txid?: true,
+    duplicate?: boolean,
+    offset: number,
     height: number,
 }
 
@@ -31,7 +38,7 @@ export const BsvUnifiedMerklePathView: FC<BsvUnifiedMerklePathViewProps> = () =>
         <header>BUMP:</header>
         {_.isEmpty(proof)
             ? <NoTransactionSelected/> :
-            <pre>{JSON.stringify(BUMP, ["blockHeight", "path", "hash", "txid", "offset" ] , 2)}</pre>
+            <pre>{JSON.stringify(BUMP, ["blockHeight", "path", "offset", "hash", "txid", "duplicate"], 2)}</pre>
         }
     </article>
 }
@@ -48,7 +55,7 @@ function toBumpPaths(proof: MerkleProofByTx) {
         .flatMap(([, leafs]) => leafs.reduce(_.merge))
         .transform((bump, {height, ...it}) => {
             const pathAtHeight = bump[height] || []
-            pathAtHeight.push({...it})
+            pathAtHeight.push(it.duplicate ? {offset: it.offset, duplicate: true} : {...it})
             bump[height] = pathAtHeight
             return bump
         }, [] as BumpLeaf[][])
@@ -56,7 +63,7 @@ function toBumpPaths(proof: MerkleProofByTx) {
 }
 
 function toLeafs(path: TreePart[]): MerklePathLeaf[] {
-    return path.map(p => ({hash: p.hash, offset: p.offset, height: p.height}));
+    return path.map(p => ({hash: p.hash, offset: p.offset, height: p.height, duplicate: p.duplicated}));
 }
 
 function toLeaf(it: [string, MerkleProof]): MerklePathLeaf {
