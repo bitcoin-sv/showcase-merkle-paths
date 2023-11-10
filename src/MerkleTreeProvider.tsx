@@ -104,7 +104,6 @@ export function createTreeOfSize(selectedSize: number) {
   while (tree.length != 1) {
     const pairs = chunk(tree, 2);
     tree = pairs.map<TreePart>((pair, offset) => {
-      //debugger
       const right = pair[1] || {
         hash: pair[0].hash,
         offset: pair[0].offset + 1,
