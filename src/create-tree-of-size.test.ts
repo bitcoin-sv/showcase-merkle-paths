@@ -1,11 +1,10 @@
-import {expect, test} from 'vitest'
-import {createTreeOfSize} from "./MerkleTreeProvider.tsx";
+import { expect, test } from "vitest";
+import { createTreeOfSize } from "./MerkleTreeProvider.tsx";
 
+test("create tree of size", () => {
+  const tree = createTreeOfSize(8);
 
-test('create tree of size', () => {
-    const tree = createTreeOfSize(8)
-
-    expect(tree).toMatchInlineSnapshot(`
+  expect(tree).toMatchInlineSnapshot(`
       {
         "hash": "ABCDEFGH",
         "height": 3,
@@ -81,5 +80,5 @@ test('create tree of size', () => {
           },
         },
       }
-    `)
+    `);
 });

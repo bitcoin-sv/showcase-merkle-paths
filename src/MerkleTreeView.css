@@ -26,7 +26,7 @@
 /* _________ */
 .tree li:before {
   outline: solid 1px #666;
-  content: '';
+  content: "";
   left: 0;
   position: absolute;
   right: 0;
@@ -50,7 +50,7 @@
   white-space: nowrap;
 }
 
-.tree li.selected{
+.tree li.selected {
   cursor: pointer;
 }
 
@@ -71,7 +71,7 @@
 
 /* If the tree represents DOM structure */
 .tree code {
-  font-family: monaco, Consolas, 'Lucida Console', monospace;
+  font-family: monaco, Consolas, "Lucida Console", monospace;
 }
 
 /* | */
@@ -79,7 +79,7 @@
 .tree code:before,
 .tree span:before {
   outline: solid 1px #666;
-  content: '';
+  content: "";
   height: 2.5em;
   left: 50%;
   position: absolute;
