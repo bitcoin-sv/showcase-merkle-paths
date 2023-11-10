@@ -5,10 +5,6 @@ import {MerkleProofByTx} from "./merkle-tree-data";
 import * as _ from "lodash";
 import {NoTransactionSelected} from "./NoTransactionSelected.tsx";
 
-interface MerkleProofsViewProps {
-
-}
-
 const MerkleProofList: FC<{ proof: MerkleProofByTx }> = ({proof}) => {
     return <div className='merkle-proofs'>
         {
@@ -20,7 +16,7 @@ const MerkleProofList: FC<{ proof: MerkleProofByTx }> = ({proof}) => {
     </div>;
 }
 
-export const MerkleProofsView: FC<MerkleProofsViewProps> = () => {
+export const MerkleProofsView = () => {
     const {proof} = useMerklePath();
 
     return <div className='merkle-proofs-view'>

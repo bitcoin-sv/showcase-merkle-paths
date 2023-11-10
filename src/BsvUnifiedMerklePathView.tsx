@@ -1,13 +1,8 @@
-import {FC} from "react";
 import {useMerklePath} from "./MerkleProofsProvider.tsx";
 import * as _ from "lodash";
 import {NoTransactionSelected} from "./NoTransactionSelected.tsx";
 import './BsvUnifiedMerklePathView.css'
 import {MerkleProof, MerkleProofByTx, TreePart} from "./merkle-tree-data";
-
-interface BsvUnifiedMerklePathViewProps {
-
-}
 
 type BumpLeaf = {
     hash: string,
@@ -26,7 +21,7 @@ interface MerklePathLeaf {
     height: number,
 }
 
-export const BsvUnifiedMerklePathView: FC<BsvUnifiedMerklePathViewProps> = () => {
+export const BsvUnifiedMerklePathView = () => {
     const {proof} = useMerklePath();
 
     const BUMP = {

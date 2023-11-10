@@ -1,6 +1,5 @@
-import "./NoTransactionSelected.css";
-import { FC } from "react";
+import './NoTransactionSelected.css'
 
-export const NoTransactionSelected: FC = () => {
-  return <p className="no-transaction-selected">No transaction selected</p>;
-};
+export const NoTransactionSelected = () => {
+    return <p className="no-transaction-selected">No transaction selected</p>
+}

@@ -5,10 +5,7 @@ import {useMerkleTree} from "./MerkleTreeProvider.tsx";
 import * as _ from "lodash";
 import {useMerklePath} from "./MerkleProofsProvider.tsx";
 
-interface MerkleTreeProps {
-}
-
-export const MerkleTreeView: FC<MerkleTreeProps> = () => {
+export const MerkleTreeView = () => {
     const {tree} = useMerkleTree()
 
     return <figure>

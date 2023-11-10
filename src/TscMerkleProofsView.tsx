@@ -5,10 +5,6 @@ import {MerkleProofByTx} from "./merkle-tree-data";
 import * as _ from "lodash";
 import {NoTransactionSelected} from "./NoTransactionSelected.tsx";
 
-interface TscMerkleProofsViewProps {
-
-}
-
 const TscMerkleProofList: FC<{ proof: MerkleProofByTx }> = ({proof}) => {
     return <div className='tsc-merkle-proofs'>
         {
@@ -40,7 +36,7 @@ const TscMerkleProof: FC<{proof: TscMerkleProofFormat}> = ({proof}) => {
     return <pre>{JSON.stringify(proof, null, 2)}</pre>
 }
 
-export const TscMerkleProofsView: FC<TscMerkleProofsViewProps> = () => {
+export const TscMerkleProofsView = () => {
     const {proof} = useMerklePath();
 
     return <div className='tsc-merkle-proofs-view'>
