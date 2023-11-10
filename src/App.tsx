@@ -6,19 +6,32 @@ import {MerkleProofsView} from "./MerkleProofsView.tsx";
 import {ResetProvider} from "./useReset.tsx";
 import {TscMerkleProofsView} from "./TscMerkleProofsView.tsx";
 import {BsvUnifiedMerklePathView} from "./BsvUnifiedMerklePathView.tsx";
-
+import {Grid} from "@mui/material";
 
 function App() {
     return (
         <ResetProvider>
             <MerkleTreeProvider>
-                    <MerkleProofProvider>
-                        <MerkleTreeSizeSelector/>
-                        <MerkleTreeView/>
-                        <MerkleProofsView />
-                        <BsvUnifiedMerklePathView />
-                        <TscMerkleProofsView />
-                    </MerkleProofProvider>
+                <MerkleProofProvider>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <MerkleTreeSizeSelector/>
+                        </Grid>
+                        <Grid item xs={12} sx={{overflow: 'auto'}}>
+                            <MerkleTreeView/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <MerkleProofsView/>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <BsvUnifiedMerklePathView/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TscMerkleProofsView/>
+                        </Grid>
+                    </Grid>
+                </MerkleProofProvider>
             </MerkleTreeProvider>
         </ResetProvider>
     )

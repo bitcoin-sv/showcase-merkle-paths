@@ -13,8 +13,26 @@ describe("MerkleProofProvider mutations", () => {
                 "A": {
                   "index": 0,
                   "path": [
-                    "B",
-                    "CD",
+                    {
+                      "hash": "B",
+                      "height": 0,
+                      "offset": 1,
+                    },
+                    {
+                      "hash": "CD",
+                      "height": 1,
+                      "left": {
+                        "hash": "C",
+                        "height": 0,
+                        "offset": 2,
+                      },
+                      "offset": 1,
+                      "right": {
+                        "hash": "D",
+                        "height": 0,
+                        "offset": 3,
+                      },
+                    },
                   ],
                 },
               }
@@ -32,15 +50,51 @@ describe("MerkleProofProvider mutations", () => {
                 "A": {
                   "index": 0,
                   "path": [
-                    "B",
-                    "CD",
+                    {
+                      "hash": "B",
+                      "height": 0,
+                      "offset": 1,
+                    },
+                    {
+                      "hash": "CD",
+                      "height": 1,
+                      "left": {
+                        "hash": "C",
+                        "height": 0,
+                        "offset": 2,
+                      },
+                      "offset": 1,
+                      "right": {
+                        "hash": "D",
+                        "height": 0,
+                        "offset": 3,
+                      },
+                    },
                   ],
                 },
                 "C": {
                   "index": 2,
                   "path": [
-                    "D",
-                    "AB",
+                    {
+                      "hash": "D",
+                      "height": 0,
+                      "offset": 3,
+                    },
+                    {
+                      "hash": "AB",
+                      "height": 1,
+                      "left": {
+                        "hash": "A",
+                        "height": 0,
+                        "offset": 0,
+                      },
+                      "offset": 0,
+                      "right": {
+                        "hash": "B",
+                        "height": 0,
+                        "offset": 1,
+                      },
+                    },
                   ],
                 },
               }
