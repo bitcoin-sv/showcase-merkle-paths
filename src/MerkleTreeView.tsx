@@ -1,6 +1,6 @@
 import "./MerkleTreeView.css";
 import { FC, PropsWithChildren, useState } from "react";
-import { TreeLeaf, TreeNode, TreePart, MerkleTree } from "./merkle-tree-data";
+import { TreeLeaf, TreeNode, TreePart, MerkleTree, DuplicatedNode } from "./merkle-tree-data";
 import { useMerkleTree } from "./MerkleTreeProvider.tsx";
 import * as _ from "lodash";
 import { useMerklePath } from "./MerkleProofsProvider.tsx";
@@ -38,7 +38,7 @@ interface BaseNodeProps {
 }
 
 interface MerkleNodeProps extends BaseNodeProps {
-  part: TreeNode;
+  part: TreeNode ;
 }
 
 const MerkleNode: FC<MerkleNodeProps> = ({
@@ -60,7 +60,7 @@ const MerkleNode: FC<MerkleNodeProps> = ({
   );
 };
 
-function isLeaf(part: TreePart): part is TreeLeaf {
+function isLeaf(part: TreePart): part is TreeLeaf | DuplicatedNode {
   return !("left" in part && "right" in part);
 }
 
@@ -148,7 +148,7 @@ const Branches: FC<BranchesProps> = ({
 };
 
 interface MerkleTreeLeafProps extends BaseNodeProps {
-  part: TreeLeaf;
+  part: TreeLeaf | DuplicatedNode;
 }
 
 const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({

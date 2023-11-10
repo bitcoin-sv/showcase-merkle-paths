@@ -1,10 +1,17 @@
-export type TreePart = TreeNode | TreeLeaf;
+export type TreePart = TreeNode | TreeLeaf | DuplicatedNode;
 
 export interface TreeLeaf {
   height: 0;
   hash: string;
   offset: number;
   duplicated?: boolean;
+}
+
+export interface DuplicatedNode {
+  height: number;
+  hash: string;
+  offset: number;
+  duplicated: true;
 }
 
 export interface TreeNode {

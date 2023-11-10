@@ -71,7 +71,7 @@ export const addNodeToProof = (
           path: [],
         };
 
-  if (node.hash == hash) {
+  if (node.hash == hash && !node.duplicated) {
     merkleProof.index = node.offset;
   } else {
     const path = merkleProof.path;
