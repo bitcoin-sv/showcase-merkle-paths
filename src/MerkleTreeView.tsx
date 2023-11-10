@@ -116,6 +116,10 @@ const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({part, isPartOfMerkleProof = fa
     const merkleProof = useMerklePath()
 
     const clickHandler = () => {
+        if(part.duplicated) {
+            return
+        }
+
         const val = !selected
         setSelected(val)
         if(val) {
@@ -126,7 +130,7 @@ const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({part, isPartOfMerkleProof = fa
         onSelectionChange(val, part.hash)
     }
 
-    return <MerkleTreePart part={part} onClick={clickHandler} className={`clickable ${selected ? 'selected' : ''} ${isPartOfMerkleProof ? 'merkleproof' : ''}`}/>
+    return <MerkleTreePart part={part} onClick={clickHandler} className={`${ !part.duplicated && 'clickable' } ${selected && 'selected' } ${isPartOfMerkleProof && 'merkleproof' }`}/>
 }
 
 
