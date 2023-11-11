@@ -99,7 +99,7 @@ export function createTreeOfSize(selectedSize: number) {
       }) as TreeLeaf,
   );
 
-  let tree: TreePart[] = [...leafs];
+  let tree: TreePart[] = leafs;
 
   while (tree.length != 1) {
     const pairs = chunk(tree, 2);

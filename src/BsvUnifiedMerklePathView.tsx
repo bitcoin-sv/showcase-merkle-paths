@@ -2,7 +2,7 @@ import { useMerklePath } from "./MerkleProofsProvider.tsx";
 import _ from "lodash";
 import { NoTransactionSelected } from "./NoTransactionSelected.tsx";
 import "./BsvUnifiedMerklePathView.css";
-import { MerkleProof, MerkleProofByTx, TreePart } from "./merkle-tree-data";
+import { MerkleProofByTx } from "./merkle-tree-data";
 
 type BumpLeaf =
   | {
@@ -14,14 +14,6 @@ type BumpLeaf =
       offset: number;
       duplicate: true;
     };
-
-interface MerklePathLeaf {
-  hash: string;
-  txid?: true;
-  duplicate?: boolean;
-  offset: number;
-  height: number;
-}
 
 export const BsvUnifiedMerklePathView = () => {
   const { proof } = useMerklePath();
@@ -50,69 +42,56 @@ export const BsvUnifiedMerklePathView = () => {
 };
 
 function toBumpPaths(proof: MerkleProofByTx) {
-  const pathParts: MerklePathLeaf[] = listAllPaths(proof);
-  const pathPartsWithoutShared = mergeSharedPaths(pathParts);
+  let bump: BumpLeaf[][] = [];
 
-  const bumpPath = [] as BumpLeaf[][];
-  groupByHeight(pathPartsWithoutShared)
-    .forEach(([height, paths]) => {
-      bumpPath[parseInt(height)] = convertToBumpPaths(paths);
+  for (const [key, val] of Object.entries(proof)) {
+    const height = val.path.length;
+    const bumpPath: BumpLeaf[][] = Array.from(Array(height), () => []);
+
+    bumpPath[0].push({
+      offset: val.index,
+      txid: true,
+      hash: key,
     });
 
-  return bumpPath;
-}
+    for (let i = 0; i < val.path.length; i++) {
+      if (val.path[i].duplicated) {
+        bumpPath[i].push({
+          offset: val.path[i].offset,
+          duplicate: true,
+        });
+      } else {
+        bumpPath[i].push({
+          offset: val.path[i].offset,
+          hash: val.path[i].hash,
+        });
+      }
+    }
 
-function listAllPaths(proof: MerkleProofByTx) {
-  return Object.entries(proof).flatMap((it) => [
-    toLeaf(it),
-    ...toLeafs(it[1].path),
-  ]);
-}
-
-function mergeSharedPaths(paths: MerklePathLeaf[]) {
-  return _(paths)
-    .groupBy((path) => `${path.height}_${path.offset}`)
-    .map((it) => _.merge({} as MerklePathLeaf, ...it) as MerklePathLeaf)
-    .value();
-}
-
-function groupByHeight(pathPartsWithoutShared: MerklePathLeaf[]) {
-  return _(pathPartsWithoutShared).groupBy("height").entries();
-}
-
-function toLeafs(path: TreePart[]): MerklePathLeaf[] {
-  return path.map((p) => ({
-    hash: p.hash,
-    offset: p.offset,
-    height: p.height,
-    duplicate: p.duplicated,
-  }));
-}
-
-function toLeaf(it: [string, MerkleProof]): MerklePathLeaf {
-  return {
-    hash: it[0],
-    txid: true,
-    offset: it[1].index,
-    height: 0,
-  };
-}
-
-function convertToBumpPaths(paths: MerklePathLeaf[]) {
-  return paths.map(toBumpPath);
-}
-
-function toBumpPath(path: MerklePathLeaf): BumpLeaf {
-  if (path.duplicate) {
-    return {
-      duplicate: true,
-      offset: path.offset,
-    };
-  } else {
-    return {
-      hash: path.hash,
-      txid: path.txid,
-      offset: path.offset,
-    };
+    bump = mergeBumps(bump, bumpPath);
   }
+
+  return bump;
 }
+
+const mergeBumps = (bump: BumpLeaf[][], bumpPath: BumpLeaf[][]) => {
+  if (bump.length === 0) {
+    bump = Array.from(Array(bumpPath.length), () => []);
+  }
+
+  for (let i = 0; i < bump.length; i++) {
+    for (const elem of bumpPath[i]) {
+      const existingElem = bump[i].find((b) => b.offset === elem.offset);
+
+      if (!existingElem) {
+        bump[i].push(elem);
+      } else if (i === 0 && elem.txid && elem.txid === true) {
+        existingElem.txid = true;
+      }
+    }
+
+    bump[i].sort((a, b) => a.hash.localeCompare(b.hash));
+  }
+
+  return bump;
+};
