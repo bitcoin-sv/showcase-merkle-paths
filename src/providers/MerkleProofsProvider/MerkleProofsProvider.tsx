@@ -1,4 +1,4 @@
-import { MerkleProofByTx, TreePart } from "./merkle-tree-data";
+import { MerkleProofByTx, TreePart } from "../../types/merkle-tree-data";
 import {
   createContext,
   FC,
@@ -6,7 +6,7 @@ import {
   useContext,
   useState,
 } from "react";
-import { useReset } from "./useReset.tsx";
+import { useReset } from "../ResetStateProvider/ResetStateProvider.tsx";
 
 interface ContextValue {
   value: MerkleProofByTx;

@@ -1,9 +1,15 @@
 import "./MerkleTreeView.css";
 import { FC, PropsWithChildren, useState } from "react";
-import { TreeLeaf, TreeNode, TreePart, MerkleTree, DuplicatedNode } from "./merkle-tree-data";
-import { useMerkleTree } from "./MerkleTreeProvider.tsx";
+import {
+  TreeLeaf,
+  TreeNode,
+  TreePart,
+  MerkleTree,
+  DuplicatedNode,
+} from "../../types/merkle-tree-data";
+import { useMerkleTree } from "../../providers/MerkleTreeProvider/MerkleTreeProvider.tsx";
 import * as _ from "lodash";
-import { useMerklePath } from "./MerkleProofsProvider.tsx";
+import { useMerklePath } from "../../providers/MerkleProofsProvider/MerkleProofsProvider.tsx";
 
 export const MerkleTreeView = () => {
   const { tree } = useMerkleTree();
@@ -38,7 +44,7 @@ interface BaseNodeProps {
 }
 
 interface MerkleNodeProps extends BaseNodeProps {
-  part: TreeNode ;
+  part: TreeNode;
 }
 
 const MerkleNode: FC<MerkleNodeProps> = ({
