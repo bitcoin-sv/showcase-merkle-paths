@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useMerkleTree } from "./MerkleTreeProvider.tsx";
+import { useMerkleTree } from "../../providers/MerkleTreeProvider/MerkleTreeProvider.tsx";
 import { Slider, Typography } from "@mui/material";
 import { isArray } from "lodash";
 

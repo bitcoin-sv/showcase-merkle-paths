@@ -1,8 +1,12 @@
-import { useMerklePath } from "./MerkleProofsProvider.tsx";
+import { useMerklePath } from "../../providers/MerkleProofsProvider/MerkleProofsProvider.tsx";
 import _ from "lodash";
-import { NoTransactionSelected } from "./NoTransactionSelected.tsx";
+import { NoTransactionSelected } from "../NoTransactionSelected/NoTransactionSelected.tsx";
 import "./BsvUnifiedMerklePathView.css";
-import { MerkleProof, MerkleProofByTx, TreePart } from "./merkle-tree-data";
+import {
+  MerkleProof,
+  MerkleProofByTx,
+  TreePart,
+} from "../../types/merkle-tree-data";
 
 type BumpLeaf =
   | {
@@ -54,10 +58,9 @@ function toBumpPaths(proof: MerkleProofByTx) {
   const pathPartsWithoutShared = mergeSharedPaths(pathParts);
 
   const bumpPath = [] as BumpLeaf[][];
-  groupByHeight(pathPartsWithoutShared)
-    .forEach(([height, paths]) => {
-      bumpPath[parseInt(height)] = convertToBumpPaths(paths);
-    });
+  groupByHeight(pathPartsWithoutShared).forEach(([height, paths]) => {
+    bumpPath[parseInt(height)] = convertToBumpPaths(paths);
+  });
 
   return bumpPath;
 }

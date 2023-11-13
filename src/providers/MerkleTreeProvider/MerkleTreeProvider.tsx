@@ -5,9 +5,9 @@ import {
   useState,
   useContext,
 } from "react";
-import { MerkleTree, TreeLeaf, TreePart } from "./merkle-tree-data";
+import { MerkleTree, TreeLeaf, TreePart } from "../../types/merkle-tree-data";
 import { chunk } from "lodash";
-import { useReset } from "./useReset.tsx";
+import { useReset } from "../ResetStateProvider/ResetStateProvider.tsx";
 
 interface MerkleTreeDataContextValue {
   tree: MerkleTree;

@@ -1,9 +1,9 @@
 import "./TscMerkleProofsView.css";
 import { FC } from "react";
-import { useMerklePath } from "./MerkleProofsProvider.tsx";
-import { MerkleProofByTx } from "./merkle-tree-data";
+import { useMerklePath } from "../../providers/MerkleProofsProvider/MerkleProofsProvider.tsx";
+import { MerkleProofByTx } from "../../types/merkle-tree-data";
 import * as _ from "lodash";
-import { NoTransactionSelected } from "./NoTransactionSelected.tsx";
+import { NoTransactionSelected } from "../NoTransactionSelected/NoTransactionSelected.tsx";
 
 const TscMerkleProofList: FC<{ proof: MerkleProofByTx }> = ({ proof }) => {
   return (

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { TreePart } from "./merkle-tree-data";
+import { TreePart } from "../../types/merkle-tree-data";
 import { addNodeToProof } from "./MerkleProofsProvider.tsx";
 
 describe("MerkleProofProvider mutations", () => {
