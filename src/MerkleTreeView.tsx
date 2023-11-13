@@ -1,14 +1,11 @@
 import "./MerkleTreeView.css";
 import { FC, PropsWithChildren, useState } from "react";
-import { TreeLeaf, TreeNode, TreePart, MerkleTree } from "./merkle-tree-data";
+import { TreeLeaf, TreeNode, TreePart, MerkleTree, DuplicatedNode } from "./merkle-tree-data";
 import { useMerkleTree } from "./MerkleTreeProvider.tsx";
-import { useCompoundMerkleProof } from "./CompoundMerkleProofProvider.tsx";
 import * as _ from "lodash";
 import { useMerklePath } from "./MerkleProofsProvider.tsx";
 
-interface MerkleTreeProps {}
-
-export const MerkleTreeView: FC<MerkleTreeProps> = () => {
+export const MerkleTreeView = () => {
   const { tree } = useMerkleTree();
 
   return (
@@ -41,7 +38,7 @@ interface BaseNodeProps {
 }
 
 interface MerkleNodeProps extends BaseNodeProps {
-  part: TreeNode;
+  part: TreeNode ;
 }
 
 const MerkleNode: FC<MerkleNodeProps> = ({
@@ -63,7 +60,7 @@ const MerkleNode: FC<MerkleNodeProps> = ({
   );
 };
 
-function isLeaf(part: TreePart): part is TreeLeaf {
+function isLeaf(part: TreePart): part is TreeLeaf | DuplicatedNode {
   return !("left" in part && "right" in part);
 }
 
@@ -87,7 +84,6 @@ const Branches: FC<BranchesProps> = ({
     left: [],
     right: [],
   });
-  const { add, remove } = useCompoundMerkleProof();
   const { add: addToMerkleProofs } = useMerklePath();
   const leftSelectionHandler = (selected: boolean, hash: string) => {
     const val = {
@@ -102,8 +98,6 @@ const Branches: FC<BranchesProps> = ({
     }
     setMerkleTreePart(val);
     onSelectionChange(selected, hash);
-    const op = _.isEmpty(val.right) ? remove : add;
-    op(right);
   };
 
   const rightSelectionHandler = (selected: boolean, hash: string) => {
@@ -119,8 +113,6 @@ const Branches: FC<BranchesProps> = ({
     }
     setMerkleTreePart(val);
     onSelectionChange(selected, hash);
-    const op = _.isEmpty(val.left) ? remove : add;
-    op(left);
   };
 
   return (
@@ -156,7 +148,7 @@ const Branches: FC<BranchesProps> = ({
 };
 
 interface MerkleTreeLeafProps extends BaseNodeProps {
-  part: TreeLeaf;
+  part: TreeLeaf | DuplicatedNode;
 }
 
 const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({
@@ -166,17 +158,18 @@ const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({
 }) => {
   const [selected, setSelected] = useState(false);
   const merkleProof = useMerklePath();
-  const cmp = useCompoundMerkleProof();
 
   const clickHandler = () => {
+    if (part.duplicated) {
+      return;
+    }
+
     const val = !selected;
     setSelected(val);
     if (val) {
       merkleProof.add(part.hash, part);
-      cmp.add(part);
     } else {
       merkleProof.remove(part.hash);
-      cmp.remove(part);
     }
     onSelectionChange(val, part.hash);
   };
@@ -185,9 +178,9 @@ const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({
     <MerkleTreePart
       part={part}
       onClick={clickHandler}
-      className={`clickable ${selected ? "selected" : ""} ${
-        isPartOfMerkleProof ? "merkleproof" : ""
-      }`}
+      className={`${!part.duplicated && "clickable"} ${
+        selected && "selected"
+      } ${isPartOfMerkleProof && "merkleproof"}`}
     />
   );
 };
@@ -211,7 +204,7 @@ const MerkleTreePart: FC<PropsWithChildren<MerkleTreePartProps>> = ({
       className={className}
     >
       <code>
-        {part.offset}: {part.hash}
+        {part.offset}: {part.duplicated ? "*" : part.hash}
       </code>
       {children}
     </li>

@@ -1,9 +1,17 @@
-export type TreePart = TreeNode | TreeLeaf;
+export type TreePart = TreeNode | TreeLeaf | DuplicatedNode;
 
 export interface TreeLeaf {
   height: 0;
   hash: string;
   offset: number;
+  duplicated?: boolean;
+}
+
+export interface DuplicatedNode {
+  height: number;
+  hash: string;
+  offset: number;
+  duplicated: true;
 }
 
 export interface TreeNode {
@@ -12,6 +20,7 @@ export interface TreeNode {
   offset: number;
   left: TreePart;
   right: TreePart;
+  duplicated?: boolean;
 }
 
 export type MerkleTree = TreeNode;
@@ -20,7 +29,7 @@ export type CompoundMerkleProof = Record<string, number>[];
 
 export interface MerkleProof {
   index: number;
-  path: string[];
+  path: TreePart[];
 }
 
 export type MerkleProofByTx = Record<string, MerkleProof>;

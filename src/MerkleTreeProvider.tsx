@@ -103,13 +103,21 @@ export function createTreeOfSize(selectedSize: number) {
 
   while (tree.length != 1) {
     const pairs = chunk(tree, 2);
-    tree = pairs.map<TreePart>((pair, offset) => ({
-      hash: pair[0].hash + pair[1].hash,
-      offset,
-      height: pair[0].height + 1,
-      left: pair[0],
-      right: pair[1],
-    }));
+    tree = pairs.map<TreePart>((pair, offset) => {
+      const right = pair[1] || {
+        hash: pair[0].hash,
+        offset: pair[0].offset + 1,
+        height: pair[0].height,
+        duplicated: true,
+      };
+      return {
+        hash: pair[0].hash + right.hash,
+        offset,
+        height: pair[0].height + 1,
+        left: pair[0],
+        right: right,
+      };
+    });
   }
 
   return tree[0] as MerkleTree;

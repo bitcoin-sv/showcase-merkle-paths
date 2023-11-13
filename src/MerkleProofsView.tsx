@@ -5,13 +5,12 @@ import { MerkleProofByTx } from "./merkle-tree-data";
 import * as _ from "lodash";
 import { NoTransactionSelected } from "./NoTransactionSelected.tsx";
 
-interface MerkleProofsViewProps {}
-
 const MerkleProofList: FC<{ proof: MerkleProofByTx }> = ({ proof }) => {
   return (
     <div className="merkle-proofs">
       {Object.entries(proof)
         .map((it) => ({ ...it[1], txid: it[0] }))
+        .map((it) => ({ ...it, path: it.path.map((p) => p.hash) }))
         .map((it) => (
           <pre key={it.txid}>{JSON.stringify(it, null, 2)}</pre>
         ))}
@@ -19,7 +18,7 @@ const MerkleProofList: FC<{ proof: MerkleProofByTx }> = ({ proof }) => {
   );
 };
 
-export const MerkleProofsView: FC<MerkleProofsViewProps> = () => {
+export const MerkleProofsView = () => {
   const { proof } = useMerklePath();
 
   return (

@@ -71,11 +71,11 @@ export const addNodeToProof = (
           path: [],
         };
 
-  if (node.hash == hash) {
+  if (node.hash == hash && !node.duplicated) {
     merkleProof.index = node.offset;
   } else {
     const path = merkleProof.path;
-    path.push(node.hash);
+    path.push(node);
   }
 
   proofs[hash] = merkleProof;
