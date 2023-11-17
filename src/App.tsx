@@ -2,7 +2,6 @@ import { MerkleTreeView } from "./MerkleTreeView.tsx";
 import { MerkleTreeProvider } from "./MerkleTreeProvider.tsx";
 import { MerkleTreeSizeSelector } from "./MerkleTreeSizeSelector.tsx";
 import { MerkleProofProvider } from "./MerkleProofsProvider.tsx";
-import { MerkleProofsView } from "./MerkleProofsView.tsx";
 import { ResetProvider } from "./useReset.tsx";
 import { TscMerkleProofsView } from "./TscMerkleProofsView.tsx";
 import { BsvUnifiedMerklePathView } from "./BsvUnifiedMerklePathView.tsx";
@@ -20,10 +19,6 @@ function App() {
             <Grid item xs={12} sx={{ overflow: "auto" }}>
               <MerkleTreeView />
             </Grid>
-            <Grid item xs={12}>
-              <MerkleProofsView />
-            </Grid>
-
             <Grid item xs={12}>
               <BsvUnifiedMerklePathView />
             </Grid>

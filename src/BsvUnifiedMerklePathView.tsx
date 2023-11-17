@@ -3,17 +3,19 @@ import _ from "lodash";
 import { NoTransactionSelected } from "./NoTransactionSelected.tsx";
 import "./BsvUnifiedMerklePathView.css";
 import { MerkleProof, MerkleProofByTx, TreePart } from "./merkle-tree-data";
+import { displayAsIfItWereA32ByteHash } from "./RenderHashes.tsx";
 
-type BumpLeaf =
-  | {
-      hash: string;
-      txid?: true;
-      offset: number;
-    }
-  | {
-      offset: number;
-      duplicate: true;
-    };
+type BumpLeaf = {
+    duplicate?: true;
+    hash?: string;
+    txid?: true;
+    offset: number;
+  };
+
+type BUMP = {
+  blockHeight: number;
+  path: BumpLeaf[][];
+};
 
 interface MerklePathLeaf {
   hash: string;
@@ -23,26 +25,60 @@ interface MerklePathLeaf {
   height: number;
 }
 
+function calculateTheByteLengthOfBUMP(BUMP: BUMP) {
+  if (!BUMP || BUMP.path.length === 0) return 0;
+  let total = 4; // height
+  BUMP.path.forEach((level) => {
+    total += 1; // number of leaves
+    level.forEach((leaf) => {
+      total += 1; // offset
+      if (leaf.duplicate) {
+        total += 1;
+      } else {
+        total += 33;
+      }
+    });
+  });
+  return total;
+}
+
 export const BsvUnifiedMerklePathView = () => {
   const { proof } = useMerklePath();
 
   const BUMP = {
-    blockHeight: 987_654_321,
+    blockHeight: 818433,
     path: toBumpPaths(proof),
   };
 
+  const renderNeatly = (BUMP : BUMP) => {
+    let output = "{\n  \"blockHeight\": " + BUMP?.blockHeight + ",\n  \"path\": [\n";
+    BUMP?.path?.map((level : BumpLeaf[], index : number) => {
+      output += "    [\n      ";
+      level?.map((leaf : BumpLeaf, index : number) => {
+        output += JSON.stringify(leaf);
+        if (index < level.length - 1) {
+          output += ",\n      ";
+        } else {
+          output += "\n    ]";
+        }
+      });
+      if (index < BUMP.path.length - 1) {
+        output += ",\n";
+      } else {
+        output += "\n  ]\n}";
+      }
+    });
+    return output
+  }
+
   return (
     <article className="bump-view">
-      <header>BUMP:</header>
+      <header>BUMP Format: {calculateTheByteLengthOfBUMP(BUMP)} bytes</header>
       {_.isEmpty(proof) ? (
         <NoTransactionSelected />
       ) : (
         <pre>
-          {JSON.stringify(
-            BUMP,
-            ["blockHeight", "path", "offset", "hash", "txid", "duplicate"],
-            2,
-          )}
+          {renderNeatly(BUMP)}
         </pre>
       )}
     </article>
@@ -110,7 +146,7 @@ function toBumpPath(path: MerklePathLeaf): BumpLeaf {
     };
   } else {
     return {
-      hash: path.hash,
+      hash: displayAsIfItWereA32ByteHash(path.hash),
       txid: path.txid,
       offset: path.offset,
     };
