@@ -50,7 +50,7 @@ export const TscMerkleProofsView = () => {
   const { proof } = useMerklePath();
 
   return (
-    <div>
+    <div style={{ marginTop: "45px" }}>
       <header>TSC Format Merkle Proofs [DEPRECATED]: {calculateTheByteLengthOfTSC(proof)} bytes</header>
       <div className="tsc-merkle-proofs-view">
         {_.isEmpty(proof) ? (

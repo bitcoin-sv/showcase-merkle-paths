@@ -213,8 +213,6 @@ export const BsvUnifiedMerklePathView = () => {
           </pre>
           <p style={{ fontSize: '12px', color: '#666' }}>
             Binary length: {bsvMerklePath.toBinary().length} bytes
-            <br />
-            Hex: {bsvMerklePath.toHex()}
           </p>
           <div style={{ fontSize: '11px', color: '#555', marginTop: '10px', padding: '8px', background: '#e8f4fd', borderRadius: '4px' }}>
             <strong>Optimizations shown:</strong>
