@@ -1,9 +1,76 @@
 import "./MerkleTreeView.css";
 import { FC, PropsWithChildren, useState } from "react";
-import { TreeLeaf, TreeNode, TreePart, MerkleTree, DuplicatedNode } from "./merkle-tree-data";
+import { TreeLeaf, TreeNode, TreePart, MerkleTree, DuplicatedNode, MerkleProofByTx } from "./merkle-tree-data";
 import { useMerkleTree } from "./MerkleTreeProvider.tsx";
 import * as _ from "lodash";
 import { useMerklePath } from "./MerkleProofsProvider.tsx";
+
+// Import optimized BUMP logic to determine which nodes should be highlighted
+interface MerklePathLeaf {
+  hash: string;
+  txid?: boolean;
+  duplicate?: boolean;
+  offset: number;
+  height: number;
+}
+
+function isRequiredForOptimizedBump(targetPart: TreePart, proof: MerkleProofByTx): boolean {
+  // Convert proof to MerklePathLeaf format for analysis
+  const allPaths = listAllPathsFromProof(proof);
+  
+  const targetPath = allPaths.find(p => 
+    p.height === targetPart.height && 
+    p.offset === targetPart.offset && 
+    p.hash === targetPart.hash
+  );
+  
+  if (!targetPath) return false;
+  
+  return isRequiredForCalculation(targetPath, allPaths);
+}
+
+function listAllPathsFromProof(proof: MerkleProofByTx): MerklePathLeaf[] {
+  return Object.entries(proof).flatMap((it) => [
+    {
+      hash: it[0],
+      txid: true,
+      offset: it[1].index,
+      height: 0,
+    },
+    ...it[1].path.map((p) => ({
+      hash: p.hash,
+      offset: p.offset,
+      height: p.height,
+      duplicate: p.duplicated,
+    })),
+  ]);
+}
+
+function isRequiredForCalculation(targetPath: MerklePathLeaf, allPaths: MerklePathLeaf[]): boolean {
+  // If this is a txid node, it's always required
+  if (targetPath.txid) return true;
+  
+  // If this is a duplicate, it's required
+  if (targetPath.duplicate) return true;
+  
+  // Check if both children exist at the level below
+  const childLevel = targetPath.height - 1;
+  if (childLevel < 0) return true; // Base level
+  
+  const leftChildOffset = targetPath.offset * 2;
+  const rightChildOffset = targetPath.offset * 2 + 1;
+  
+  const leftChild = allPaths.find(p => p.height === childLevel && p.offset === leftChildOffset);
+  const rightChild = allPaths.find(p => p.height === childLevel && p.offset === rightChildOffset);
+  
+  // If both children are present and have hashes, this parent node is calculable (not required)
+  if (leftChild && rightChild && leftChild.hash && rightChild.hash) {
+    return false; // This node can be calculated from its children
+  }
+  
+  // Otherwise, this node is required
+  return true;
+}
 
 export const MerkleTreeView = () => {
   const { tree } = useMerkleTree();
@@ -46,10 +113,13 @@ const MerkleNode: FC<MerkleNodeProps> = ({
   isPartOfMerkleProof = false,
   onSelectionChange = () => {},
 }) => {
+  const { proof } = useMerklePath();
+  const shouldHighlight = isPartOfMerkleProof && isRequiredForOptimizedBump(part, proof);
+  
   return (
     <MerkleTreePart
       part={part}
-      className={`${isPartOfMerkleProof ? "merkleproof" : ""}`}
+      className={`${shouldHighlight ? "merkleproof" : ""} ${isPartOfMerkleProof && !shouldHighlight ? "calculable" : ""}`}
     >
       <Branches
         left={part.left}
@@ -158,6 +228,7 @@ const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({
 }) => {
   const [selected, setSelected] = useState(false);
   const merkleProof = useMerklePath();
+  const shouldHighlight = isPartOfMerkleProof && isRequiredForOptimizedBump(part, merkleProof.proof);
 
   const clickHandler = () => {
     if (part.duplicated) {
@@ -180,7 +251,7 @@ const MerkleTreeLeaf: FC<MerkleTreeLeafProps> = ({
       onClick={clickHandler}
       className={`${!part.duplicated && "clickable"} ${
         selected && "selected"
-      } ${isPartOfMerkleProof && "merkleproof"}`}
+      } ${shouldHighlight && "merkleproof"} ${isPartOfMerkleProof && !shouldHighlight ? "calculable" : ""}`}
     />
   );
 };
